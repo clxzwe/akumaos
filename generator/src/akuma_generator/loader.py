@@ -1,6 +1,30 @@
 """Configuration and theme loader module for AkumaOS Generator."""
 
-from typing import Any
+from pathlib import Path
+from typing import Any, Dict
+
+import yaml
+
+
+def load_yaml(file_path: Path | str) -> Dict[str, Any]:
+    """Load and parse a YAML configuration file.
+
+    Args:
+        file_path: Path to the YAML file.
+
+    Returns:
+        Dict[str, Any]: Parsed YAML content.
+
+    Raises:
+        FileNotFoundError: If the file does not exist.
+    """
+    path = Path(file_path)
+    if not path.exists():
+        raise FileNotFoundError(f"Configuration file not found: {path}")
+
+    with open(path, "r", encoding="utf-8") as f:
+        content = yaml.safe_load(f)
+        return content if isinstance(content, dict) else {}
 
 
 def load_theme(theme_name: str = "default") -> Any:

@@ -1,0 +1,3 @@
+{% for monitor in monitors %}
+monitor={{ monitor.name }},{{ monitor.resolution }}@{{ monitor.refresh }},{{ monitor.position }},{{ monitor.scale }}
+{% endfor %}

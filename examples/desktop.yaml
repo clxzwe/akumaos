@@ -1,0 +1,12 @@
+monitors:
+  - name: DP-1
+    resolution: 2560x1440
+    refresh: 165
+    position: 0x0
+    scale: 1
+
+  - name: HDMI-A-1
+    resolution: 1920x1080
+    refresh: 75
+    position: 2560x0
+    scale: 1
