@@ -1,0 +1,9 @@
+input {
+    kb_layout = {{ input.kb_layout }}
+    sensitivity = {{ input.sensitivity }}
+
+    touchpad {
+        natural_scroll = {{ 'true' if input.touchpad.natural_scroll else 'false' }}
+        tap-to-click = {{ 'true' if input.touchpad.tap_to_click else 'false' }}
+    }
+}

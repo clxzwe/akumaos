@@ -28,7 +28,7 @@ class MockComponent(HyprComponent):
         return f"mock_rendered_{validated_data['key']}"
 
     def get_output_path(self, project_root: Path) -> Path:
-        return project_root / "mock.conf"
+        return project_root / "config" / "hypr" / "generated" / "mock.conf"
 
 
 def test_component_registration():

@@ -1,0 +1,20 @@
+decoration {
+    rounding = {{ decoration.rounding }}
+    active_opacity = {{ decoration.active_opacity }}
+    inactive_opacity = {{ decoration.inactive_opacity }}
+
+    blur {
+        enabled = {{ 'true' if decoration.blur.enabled else 'false' }}
+        size = {{ decoration.blur.size }}
+        passes = {{ decoration.blur.passes }}
+        new_optimizations = {{ 'true' if decoration.blur.new_optimizations else 'false' }}
+        vibrancy = {{ decoration.blur.vibrancy }}
+    }
+
+    shadow {
+        enabled = {{ 'true' if decoration.shadow.enabled else 'false' }}
+        range = {{ decoration.shadow.range }}
+        render_power = {{ decoration.shadow.render_power }}
+        color = {{ decoration.shadow.color }}
+    }
+}

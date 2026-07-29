@@ -26,7 +26,7 @@ class ComponentRegistry:
         """Retrieve a registered component by name.
 
         Args:
-            name: Component name (e.g. 'monitors', 'environment').
+            name: Component name.
 
         Returns:
             HyprComponent: Registered component instance.
@@ -73,3 +73,52 @@ class ComponentRegistry:
             )
 
             cls.register(EnvironmentComponent)
+
+        if "general" not in cls._registry:
+            from akuma_generator.plugins.hypr.components.general import (
+                GeneralComponent,
+            )
+
+            cls.register(GeneralComponent)
+
+        if "decoration" not in cls._registry:
+            from akuma_generator.plugins.hypr.components.decoration import (
+                DecorationComponent,
+            )
+
+            cls.register(DecorationComponent)
+
+        if "animations" not in cls._registry:
+            from akuma_generator.plugins.hypr.components.animations import (
+                AnimationsComponent,
+            )
+
+            cls.register(AnimationsComponent)
+
+        if "input" not in cls._registry:
+            from akuma_generator.plugins.hypr.components.input import (
+                InputComponent,
+            )
+
+            cls.register(InputComponent)
+
+        if "autostart" not in cls._registry:
+            from akuma_generator.plugins.hypr.components.autostart import (
+                AutostartComponent,
+            )
+
+            cls.register(AutostartComponent)
+
+        if "binds" not in cls._registry:
+            from akuma_generator.plugins.hypr.components.binds import (
+                BindsComponent,
+            )
+
+            cls.register(BindsComponent)
+
+        if "hyprland" not in cls._registry:
+            from akuma_generator.plugins.hypr.components.master import (
+                HyprlandConfigComponent,
+            )
+
+            cls.register(HyprlandConfigComponent)

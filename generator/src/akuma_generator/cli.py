@@ -1,11 +1,13 @@
 """CLI module for AkumaOS Generator."""
 
 from pathlib import Path
+from typing import Optional
 
 import typer
 
 from akuma_generator.core.logger import setup_logger
 from akuma_generator.core.plugin_manager import PluginManager
+from akuma_generator.plugins.hypr.component_registry import ComponentRegistry
 
 app = typer.Typer(
     name="akuma",
@@ -32,11 +34,11 @@ def main(ctx: typer.Context) -> None:
 
 @app.command("generate")
 def generate(
-    component: str = typer.Option(
-        "monitors",
+    component: Optional[str] = typer.Option(
+        None,
         "--component",
         "-c",
-        help="Component to generate (e.g. monitors, environment, all)",
+        help="Component to generate (e.g. monitors, environment, general, etc.)",
     ),
     dry_run: bool = typer.Option(
         False,
@@ -54,9 +56,11 @@ def generate(
     setup_logger(verbose=verbose)
     root = _find_project_root()
 
-    if component == "all":
-        components_to_generate = ["monitors", "environment"]
-    elif component in ("monitors", "environment"):
+    all_components = ComponentRegistry.list_components()
+
+    if component is None or component == "all":
+        components_to_generate = all_components
+    elif component in all_components:
         components_to_generate = [component]
     else:
         typer.echo(f"Unknown component: {component}")

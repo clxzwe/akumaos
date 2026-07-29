@@ -1,0 +1,4 @@
+{% for service in autostart.services %}
+exec-once = {{ service }}
+{% endfor %}
+exec-once = bash -c 'if [ -f {{ autostart.wallpaper_path }} ]; then swww img {{ autostart.wallpaper_path }}; fi'
