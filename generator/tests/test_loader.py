@@ -2,6 +2,7 @@
 
 import pytest
 
+from akuma_generator.core.errors import FilesystemError
 from akuma_generator.core.loader import load_yaml
 
 
@@ -17,5 +18,5 @@ def test_load_yaml_valid(tmp_path):
 
 def test_load_yaml_not_found():
     """Test loading a non-existent YAML file."""
-    with pytest.raises(FileNotFoundError):
+    with pytest.raises(FilesystemError):
         load_yaml("non_existent_path.yaml")

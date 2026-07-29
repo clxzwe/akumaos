@@ -5,6 +5,9 @@ from typing import Any, Dict
 
 import yaml
 
+from akuma_generator.core.errors import FilesystemError, SchemaError
+from akuma_generator.core.logger import debug
+
 
 def load_yaml(file_path: Path | str) -> Dict[str, Any]:
     """Load and parse a YAML configuration file.
@@ -16,15 +19,22 @@ def load_yaml(file_path: Path | str) -> Dict[str, Any]:
         Dict[str, Any]: Parsed YAML content.
 
     Raises:
-        FileNotFoundError: If the file does not exist.
+        FilesystemError: If the file does not exist or cannot be read.
+        SchemaError: If YAML syntax parsing fails.
     """
     path = Path(file_path)
     if not path.exists():
-        raise FileNotFoundError(f"Configuration file not found: {path}")
+        raise FilesystemError(f"Configuration file not found: {path}")
 
-    with open(path, "r", encoding="utf-8") as f:
-        content = yaml.safe_load(f)
-        return content if isinstance(content, dict) else {}
+    debug(f"Loading YAML file: {path}")
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            content = yaml.safe_load(f)
+            return content if isinstance(content, dict) else {}
+    except yaml.YAMLError as e:
+        raise SchemaError(f"Invalid YAML syntax in {path}: {e}") from e
+    except OSError as e:
+        raise FilesystemError(f"Error reading file {path}: {e}") from e
 
 
 def load_theme(theme_name: str = "default") -> Any:

@@ -6,6 +6,7 @@ from typing import Any, Dict
 import pytest
 
 from akuma_generator.core.base_plugin import BasePlugin
+from akuma_generator.core.errors import PluginError
 from akuma_generator.core.plugin_manager import PluginManager
 
 
@@ -23,7 +24,11 @@ class MockPlugin(BasePlugin):
         return raw_data
 
     def render(
-        self, validated_data: Any, component: str, project_root: Path, **kwargs: Any
+        self,
+        validated_data: Any,
+        component: str,
+        project_root: Path,
+        **kwargs: Any,
     ) -> str:
         return "rendered_mock_content"
 
@@ -40,8 +45,8 @@ def test_plugin_registration():
 
 
 def test_plugin_not_found():
-    """Test retrieving a non-existent plugin raises KeyError."""
-    with pytest.raises(KeyError):
+    """Test retrieving a non-existent plugin raises PluginError."""
+    with pytest.raises(PluginError):
         PluginManager.get("non_existent_plugin")
 
 

@@ -17,7 +17,7 @@ def test_cli_generate_monitors(tmp_path, monkeypatch):
 
     result = runner.invoke(app, ["generate", "--component", "monitors"])
     assert result.exit_code == 0
-    assert "Generated:" in result.stdout
+    assert "✓ monitors" in result.stdout
 
     output_file = repo_root / "config" / "hypr" / "generated" / "monitors.conf"
     assert output_file.exists()

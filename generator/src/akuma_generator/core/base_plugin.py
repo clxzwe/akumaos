@@ -4,6 +4,8 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict
 
+from akuma_generator.core.output import OutputManager
+
 
 class BasePlugin(ABC):
     """Abstract Base Class for AkumaOS configuration generator plugins."""
@@ -42,7 +44,11 @@ class BasePlugin(ABC):
 
     @abstractmethod
     def render(
-        self, validated_data: Any, component: str, project_root: Path, **kwargs: Any
+        self,
+        validated_data: Any,
+        component: str,
+        project_root: Path,
+        **kwargs: Any,
     ) -> str:
         """Render component template with validated context data.
 
@@ -56,20 +62,33 @@ class BasePlugin(ABC):
         """
         pass
 
-    def write(self, content: str, output_path: Path) -> Path:
-        """Write rendered content to the specified output file path.
+    def write(
+        self,
+        content: str,
+        output_path: Path,
+        dry_run: bool = False,
+        backup: bool = False,
+        overwrite: bool = True,
+    ) -> Path:
+        """Write rendered content to the specified output file path via OutputManager.
 
         Args:
             content: Rendered string content.
             output_path: Destination file path.
+            dry_run: If True, simulate writing and print to stdout.
+            backup: If True, backup existing file before writing.
+            overwrite: If True, allow overwriting existing file.
 
         Returns:
             Path: Destination output file path.
         """
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(output_path, "w", encoding="utf-8") as f:
-            f.write(content)
-        return output_path
+        return OutputManager.write(
+            content,
+            output_path,
+            dry_run=dry_run,
+            backup=backup,
+            overwrite=overwrite,
+        )
 
     @abstractmethod
     def get_output_path(self, project_root: Path, component: str) -> Path:
@@ -84,12 +103,23 @@ class BasePlugin(ABC):
         """
         pass
 
-    def generate(self, project_root: Path, component: str, **kwargs: Any) -> Path:
+    def generate(
+        self,
+        project_root: Path,
+        component: str,
+        dry_run: bool = False,
+        backup: bool = False,
+        overwrite: bool = True,
+        **kwargs: Any,
+    ) -> Path:
         """Orchestrate the full plugin lifecycle: load -> validate -> render -> write.
 
         Args:
             project_root: Repository root path.
             component: Target component name to generate.
+            dry_run: If True, simulate writing without creating files.
+            backup: If True, backup target file before overwriting.
+            overwrite: If True, overwrite target file if it exists.
 
         Returns:
             Path: Path to the generated configuration file.
@@ -100,4 +130,10 @@ class BasePlugin(ABC):
             validated_data, component, project_root, **kwargs
         )
         output_path = self.get_output_path(project_root, component)
-        return self.write(rendered_content, output_path)
+        return self.write(
+            rendered_content,
+            output_path,
+            dry_run=dry_run,
+            backup=backup,
+            overwrite=overwrite,
+        )

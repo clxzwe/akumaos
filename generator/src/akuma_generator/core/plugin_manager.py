@@ -3,6 +3,8 @@
 from typing import Dict, List, Type
 
 from akuma_generator.core.base_plugin import BasePlugin
+from akuma_generator.core.errors import PluginError
+from akuma_generator.core.logger import debug
 
 
 class PluginManager:
@@ -18,6 +20,7 @@ class PluginManager:
             plugin: BasePlugin instance or class.
         """
         instance = plugin() if isinstance(plugin, type) else plugin
+        debug(f"Registering plugin: {instance.name}")
         cls._registry[instance.name] = instance
 
     @classmethod
@@ -31,12 +34,12 @@ class PluginManager:
             BasePlugin: Registered plugin instance.
 
         Raises:
-            KeyError: If no plugin is registered under the given name.
+            PluginError: If no plugin is registered under the given name.
         """
         cls._ensure_default_plugins()
         if name not in cls._registry:
             avail = cls.list_plugins()
-            raise KeyError(f"Plugin '{name}' is not registered. Available: {avail}")
+            raise PluginError(f"Plugin '{name}' is not registered. Available: {avail}")
         return cls._registry[name]
 
     @classmethod

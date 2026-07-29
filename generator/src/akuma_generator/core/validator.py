@@ -2,6 +2,10 @@
 
 from typing import Any, Dict
 
+from pydantic import ValidationError as PydanticValidationError
+
+from akuma_generator.core.errors import ValidationError
+from akuma_generator.core.logger import debug
 from akuma_generator.models import DesktopModel
 
 
@@ -13,8 +17,15 @@ def validate_desktop_config(data: Dict[str, Any]) -> DesktopModel:
 
     Returns:
         DesktopModel: Validated DesktopModel instance.
+
+    Raises:
+        ValidationError: If schema validation fails.
     """
-    return DesktopModel.model_validate(data)
+    debug("Validating desktop configuration against DesktopModel schema")
+    try:
+        return DesktopModel.model_validate(data)
+    except PydanticValidationError as e:
+        raise ValidationError(f"Desktop configuration validation failed: {e}") from e
 
 
 def validate_theme(theme_data: Any) -> bool:

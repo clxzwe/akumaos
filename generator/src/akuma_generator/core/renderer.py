@@ -4,6 +4,10 @@ from pathlib import Path
 from typing import Any, Dict
 
 from jinja2 import Environment, FileSystemLoader
+from jinja2 import TemplateError as JinjaTemplateError
+
+from akuma_generator.core.errors import TemplateError
+from akuma_generator.core.logger import debug
 
 
 def render_template(template_path: Path | str, context: Dict[str, Any]) -> str:
@@ -15,15 +19,23 @@ def render_template(template_path: Path | str, context: Dict[str, Any]) -> str:
 
     Returns:
         str: Rendered template text.
+
+    Raises:
+        TemplateError: If Jinja2 template rendering fails.
     """
     path = Path(template_path)
-    env = Environment(
-        loader=FileSystemLoader(path.parent),
-        trim_blocks=True,
-        lstrip_blocks=True,
-    )
-    template = env.get_template(path.name)
-    return template.render(context)
+    debug(f"Rendering Jinja2 template: {path}")
+
+    try:
+        env = Environment(
+            loader=FileSystemLoader(path.parent),
+            trim_blocks=True,
+            lstrip_blocks=True,
+        )
+        template = env.get_template(path.name)
+        return template.render(context)
+    except JinjaTemplateError as e:
+        raise TemplateError(f"Failed to render template {path.name}: {e}") from e
 
 
 def render_component(component_name: str, context: Dict[str, Any]) -> str:

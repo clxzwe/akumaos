@@ -57,7 +57,7 @@ def test_cli_generate_environment(tmp_path, monkeypatch):
 
     result = runner.invoke(app, ["generate", "--component", "environment"])
     assert result.exit_code == 0
-    assert "Generated:" in result.stdout
+    assert "✓ environment" in result.stdout
 
     output_file = repo_root / "config" / "hypr" / "generated" / "env.conf"
     assert output_file.exists()

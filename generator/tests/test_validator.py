@@ -1,8 +1,8 @@
 """Tests for the desktop configuration validator module."""
 
 import pytest
-from pydantic import ValidationError
 
+from akuma_generator.core.errors import ValidationError
 from akuma_generator.core.validator import validate_desktop_config
 
 
