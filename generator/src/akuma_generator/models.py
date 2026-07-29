@@ -1,6 +1,6 @@
 """Pydantic data models for AkumaOS configuration schema."""
 
-from typing import Any, List, Union
+from typing import Any, Dict, List, Union
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -23,10 +23,17 @@ class MonitorModel(BaseModel):
         return str(v)
 
 
+class EnvironmentModel(BaseModel):
+    """Pydantic model representing environment variables."""
+
+    vars: Dict[str, Union[str, int, float]] = Field(default_factory=dict)
+
+
 class DesktopModel(BaseModel):
     """Pydantic model representing desktop environment settings."""
 
     monitors: List[MonitorModel] = Field(default_factory=list)
+    environment: Dict[str, Union[str, int, float]] = Field(default_factory=dict)
 
 
 class ThemeModel(BaseModel):

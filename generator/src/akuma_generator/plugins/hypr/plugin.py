@@ -27,18 +27,36 @@ class HyprPlugin(BasePlugin):
         return validate_desktop_config(raw_data)
 
     def render(
-        self, validated_data: Any, component: str, project_root: Path, **kwargs: Any
+        self,
+        validated_data: Any,
+        component: str,
+        project_root: Path,
+        **kwargs: Any,
     ) -> str:
-        """Render Hyprland template."""
-        template_path = (
-            project_root / "generator" / "templates" / f"{component}.conf.j2"
-        )
-        context = {"monitors": [m.model_dump() for m in validated_data.monitors]}
+        """Render Hyprland component template."""
+        if component == "monitors":
+            template_path = (
+                project_root / "generator" / "templates" / "monitors.conf.j2"
+            )
+            context = {"monitors": [m.model_dump() for m in validated_data.monitors]}
+        elif component == "environment":
+            template_path = project_root / "generator" / "templates" / "env.conf.j2"
+            context = {"environment": validated_data.environment}
+        else:
+            raise ValueError(f"Unsupported Hyprland component: {component}")
+
         return render_template(template_path, context)
 
     def get_output_path(self, project_root: Path, component: str) -> Path:
         """Get output file destination for Hyprland component."""
-        return project_root / "config" / "hypr" / "generated" / f"{component}.conf"
+        if component == "monitors":
+            filename = "monitors.conf"
+        elif component == "environment":
+            filename = "env.conf"
+        else:
+            filename = f"{component}.conf"
+
+        return project_root / "config" / "hypr" / "generated" / filename
 
     @classmethod
     def generate_monitors(cls, project_root: Path) -> Path:

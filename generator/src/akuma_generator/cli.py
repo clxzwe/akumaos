@@ -35,15 +35,15 @@ def generate(
         "monitors",
         "--component",
         "-c",
-        help="Component to generate (e.g. monitors)",
+        help="Component to generate (e.g. monitors, environment)",
     ),
 ) -> None:
     """Generate configuration files for AkumaOS components."""
     root = _find_project_root()
 
-    if component == "monitors":
+    if component in ("monitors", "environment"):
         plugin = PluginManager.get("hypr")
-        output_file = plugin.generate(project_root=root, component="monitors")
+        output_file = plugin.generate(project_root=root, component=component)
         typer.echo(f"Generated: {output_file.relative_to(root)}")
     else:
         typer.echo(f"Unknown component: {component}")
