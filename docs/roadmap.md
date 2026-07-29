@@ -21,10 +21,27 @@ Establish the official repository architecture, project standards, documentation
 
 ---
 
-## Milestone v0.2 — Hyprland Core
+## Milestone v0.2 — Design Token Foundation (Completed)
 
 ### Goals
-Build the foundational Hyprland compositor configuration focused on window management, input rules, monitor layouts, and keybindings.
+Define abstract, reusable design token specifications across colors, spacing, typography, corner radii, shadows, blur, and animations before component implementation begins.
+
+### Deliverables
+- Design token specification suite (`themes/tokens/colors.md`, `spacing.md`, `typography.md`, `radius.md`, `shadows.md`, `blur.md`, `animations.md`).
+- Default theme package directory (`themes/default/`).
+- Test suite structure (`tests/config/`, `tests/install/`).
+- Developer tooling scripts (`tools/validate.sh`, `tools/format.sh`).
+
+### Exit Criteria
+- Abstract token specifications fully documented with usage guidelines and component mappings.
+- Architecture blueprint updated to reflect testing, tools, and token structures.
+
+---
+
+## Milestone v0.3 — Hyprland Core
+
+### Goals
+Build the foundational Hyprland compositor configuration focused on window management, input rules, monitor layouts, and keybindings based on design token standards.
 
 ### Deliverables
 - Core Hyprland configuration structure (`config/hypr/`).
@@ -38,10 +55,10 @@ Build the foundational Hyprland compositor configuration focused on window manag
 
 ---
 
-## Milestone v0.3 — Waybar Status Bar
+## Milestone v0.4 — Waybar Status Bar
 
 ### Goals
-Design and configure a modular status bar using Waybar that aligns with the AkumaOS design language.
+Design and configure a modular status bar using Waybar that aligns with the AkumaOS design language and token metrics.
 
 ### Deliverables
 - Waybar layout and styling configuration (`config/waybar/`).
@@ -54,7 +71,7 @@ Design and configure a modular status bar using Waybar that aligns with the Akum
 
 ---
 
-## Milestone v0.4 — Application Launcher (Wofi)
+## Milestone v0.5 — Application Launcher (Wofi)
 
 ### Goals
 Implement a fast, keyboard-driven application launcher and menu system using Wofi.
@@ -70,7 +87,7 @@ Implement a fast, keyboard-driven application launcher and menu system using Wof
 
 ---
 
-## Milestone v0.5 — Wallpaper Engine
+## Milestone v0.6 — Wallpaper Engine
 
 ### Goals
 Construct a wallpaper management system capable of background setting, collection switching, and visual synchronization.
@@ -86,7 +103,7 @@ Construct a wallpaper management system capable of background setting, collectio
 
 ---
 
-## Milestone v0.6 — Screen Lock & Power Management (Hyprlock & Hypridle)
+## Milestone v0.7 — Screen Lock & Power Management (Hyprlock & Hypridle)
 
 ### Goals
 Provide secure screen locking, session idling, and power management integrated with the desktop design system.
@@ -102,7 +119,7 @@ Provide secure screen locking, session idling, and power management integrated w
 
 ---
 
-## Milestone v0.7 — Terminal Emulator (Ghostty)
+## Milestone v0.8 — Terminal Emulator (Ghostty)
 
 ### Goals
 Integrate Ghostty as the default terminal emulator with matching typography, padding, and color schemes.
@@ -118,7 +135,7 @@ Integrate Ghostty as the default terminal emulator with matching typography, pad
 
 ---
 
-## Milestone v0.8 — Automated Installer & Tooling
+## Milestone v0.9 — Automated Installer & Tooling
 
 ### Goals
 Build a reliable, user-friendly installation and update utility suite.
@@ -131,22 +148,6 @@ Build a reliable, user-friendly installation and update utility suite.
 ### Exit Criteria
 - Installation script executes cleanly on target Arch/Linux systems.
 - Existing user files are backed up safely prior to deployment.
-
----
-
-## Milestone v0.9 — Documentation & Testing
-
-### Goals
-Complete all user guides, customization documentation, and perform end-to-end testing across hardware configurations.
-
-### Deliverables
-- Fully populated user documentation in `docs/`.
-- Troubleshooting guides and post-installation checklists.
-- Architecture diagrams and visual screenshots in `docs/images/`.
-
-### Exit Criteria
-- Zero broken links or incomplete sections in documentation.
-- Verified installation across test machines.
 
 ---
 

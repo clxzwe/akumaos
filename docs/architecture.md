@@ -14,7 +14,11 @@ AkumaOS/
 ├── config/               # Compositor, bar, launcher, and daemon configurations
 ├── docs/                 # Product architecture, design system, installation & roadmap
 ├── scripts/              # System management, installation, and utility scripts
-├── themes/               # Centralized theme definitions and color palettes
+├── tests/                # Automated testing suites for configurations and installation
+├── themes/               # Centralized theme definitions and design token specifications
+│   ├── default/          # Default theme package base
+│   └── tokens/           # Modular design token specifications (colors, spacing, etc.)
+├── tools/                # Development, validation, and formatting tooling
 └── wallpapers/           # Curated high-resolution wallpaper collections
 ```
 
@@ -27,7 +31,9 @@ AkumaOS/
 | `config/` | Application configuration subdirectories for Hyprland, Waybar, Ghostty, Hyprlock, Hypridle, Wofi, Mako, and SwayOSD. |
 | `docs/` | Comprehensive technical documentation, architectural blueprints, design guidelines, and user manuals. |
 | `scripts/` | Shell entry points for installation, updates, bootstrapping, and environment switching. |
-| `themes/` | Color schemes, visual tokens, and style templates referenced by system configuration files. |
+| `tests/` | Test suites for configuration syntax validation (`tests/config/`) and installer testing (`tests/install/`). |
+| `themes/` | Central theme definitions (`themes/default/`) and abstract design token specifications (`themes/tokens/`). |
+| `tools/` | Developer tools for repository validation (`tools/validate.sh`) and code formatting (`tools/format.sh`). |
 | `wallpapers/` | Organized wallpaper categories (minimal, abstract, nature, anime) supplied with the desktop environment. |
 
 ---
