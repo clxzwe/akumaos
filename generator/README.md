@@ -1,0 +1,91 @@
+# AkumaOS Generator Architecture Specification
+
+## Overview
+The AkumaOS Generator is the compilation engine responsible for translating abstract design tokens and declarative YAML schemas into native, application-specific configuration files.
+
+By centralizing configuration compilation within the generator layer, AkumaOS ensures that changes to design tokens or schema definitions automatically propagate across all desktop components without manual configuration editing.
+
+---
+
+## Generator Pipeline
+
+The generator processes inputs through a structured compilation pipeline:
+
+```text
+Design Tokens (themes/tokens/)
+        ↓
+Configuration Schema (schema/)
+        ↓
+Generator Engine (generator/src/ & templates/)
+        ↓
+Native Configurations (config/)
+        ↓
+Linux Desktop (Wayland Compositor & Daemons)
+```
+
+```mermaid
+flowchart TD
+    subgraph Inputs
+        TOK[Design Tokens]
+        SCH[Configuration Schemas]
+    end
+
+    subgraph Generator Core
+        PAR[Schema Parser]
+        TMP[Template Renderer]
+        VAL[Config Validator]
+    end
+
+    subgraph Output Targets
+        HYPR[config/hypr/]
+        WAY[config/waybar/]
+        GHOST[config/ghostty/]
+        LOCK[config/hyprlock/]
+        IDLE[config/hypridle/]
+        WOFI[config/wofi/]
+        MAKO[config/mako/]
+    end
+
+    TOK --> PAR
+    SCH --> PAR
+    PAR --> TMP
+    TMP --> VAL
+    VAL --> HYPR
+    VAL --> WAY
+    VAL --> GHOST
+    VAL --> LOCK
+    VAL --> IDLE
+    VAL --> WOFI
+    VAL --> MAKO
+```
+
+---
+
+## Inputs & Outputs
+
+### Inputs
+- **`themes/tokens/`**: Abstract design tokens (colors, spacing, typography, radius, shadows, blur, animations).
+- **`schema/`**: Declarative schema specifications (`theme.schema.md`, `desktop.schema.md`, `modules.schema.md`, `keybinds.schema.md`).
+
+### Outputs
+- **`config/`**: Target-specific configuration files deployed to component directories:
+  - `config/hypr/`: Hyprland compositor settings, window rules, and keybindings.
+  - `config/waybar/`: Waybar layout JSON and custom CSS styling.
+  - `config/ghostty/`: Ghostty terminal font, color palette, and window padding.
+  - `config/hyprlock/`: Hyprlock screen locker layout and auth card styles.
+  - `config/hypridle/`: Hypridle daemon timeouts and power management triggers.
+  - `config/wofi/`: Wofi launcher layout and CSS styling.
+  - `config/mako/`: Mako notification banner style and layout metrics.
+
+---
+
+## Directory Structure
+
+```text
+generator/
+├── README.md         # Generator architecture specification & documentation
+├── src/              # Parser, compiler logic, and schema validation scripts
+├── templates/        # Component template files for target applications
+├── output/           # Staging directory for generated configuration files
+└── tests/            # Automated template rendering and validation test suites
+```

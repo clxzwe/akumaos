@@ -46,7 +46,7 @@ Establish declarative YAML configuration schema specifications for themes, deskt
 ### Deliverables
 - Schema specification suite (`schema/theme.schema.md`, `desktop.schema.md`, `modules.schema.md`, `keybinds.schema.md`).
 - Schema overview documentation (`schema/README.md`).
-- Updated architectural blueprint documenting the `Tokens -> Schema -> Generators -> Configs` multi-tier pipeline.
+- Updated architectural blueprint documenting the `Tokens -> Schema -> Generator -> Configs` multi-tier pipeline.
 
 ### Exit Criteria
 - Declarative schemas fully documented using YAML specifications.
@@ -54,10 +54,26 @@ Establish declarative YAML configuration schema specifications for themes, deskt
 
 ---
 
-## Milestone v0.4 — Hyprland Core
+## Milestone v0.4 — Generator Foundation (Completed)
 
 ### Goals
-Build the foundational Hyprland compositor configuration focused on window management, input rules, monitor layouts, and keybindings based on design token and schema standards.
+Define the compilation generator architecture and pipeline structure responsible for translating design tokens and declarative schemas into native target application configs.
+
+### Deliverables
+- Generator architecture specification (`generator/README.md`).
+- Generator directory structure (`generator/src/`, `templates/`, `output/`, `tests/`) with documented responsibility guides.
+- Updated architectural pipeline diagrams detailing token parsing, template rendering, and output staging.
+
+### Exit Criteria
+- Generator architecture fully specified across inputs, outputs, and supported compilation targets.
+- All architecture diagrams updated to show `Design Tokens -> Configuration Schema -> Generator -> Native Configurations -> Linux Desktop`.
+
+---
+
+## Milestone v0.5 — Hyprland Core
+
+### Goals
+Build the foundational Hyprland compositor configuration focused on window management, input rules, monitor layouts, and keybindings based on design token, schema, and generator standards.
 
 ### Deliverables
 - Core Hyprland configuration structure (`config/hypr/`).
@@ -71,7 +87,7 @@ Build the foundational Hyprland compositor configuration focused on window manag
 
 ---
 
-## Milestone v0.5 — Waybar Status Bar
+## Milestone v0.6 — Waybar Status Bar
 
 ### Goals
 Design and configure a modular status bar using Waybar that aligns with the AkumaOS design language and token metrics.
@@ -87,7 +103,7 @@ Design and configure a modular status bar using Waybar that aligns with the Akum
 
 ---
 
-## Milestone v0.6 — Application Launcher (Wofi)
+## Milestone v0.7 — Application Launcher (Wofi)
 
 ### Goals
 Implement a fast, keyboard-driven application launcher and menu system using Wofi.
@@ -103,7 +119,7 @@ Implement a fast, keyboard-driven application launcher and menu system using Wof
 
 ---
 
-## Milestone v0.7 — Wallpaper Engine
+## Milestone v0.8 — Wallpaper Engine
 
 ### Goals
 Construct a wallpaper management system capable of background setting, collection switching, and visual synchronization.
@@ -119,7 +135,7 @@ Construct a wallpaper management system capable of background setting, collectio
 
 ---
 
-## Milestone v0.8 — Screen Lock & Power Management (Hyprlock & Hypridle)
+## Milestone v0.9 — Screen Lock & Power Management (Hyprlock & Hypridle)
 
 ### Goals
 Provide secure screen locking, session idling, and power management integrated with the desktop design system.
@@ -135,7 +151,7 @@ Provide secure screen locking, session idling, and power management integrated w
 
 ---
 
-## Milestone v0.9 — Terminal Emulator (Ghostty)
+## Milestone v1.0 — Terminal Emulator (Ghostty)
 
 ### Goals
 Integrate Ghostty as the default terminal emulator with matching typography, padding, and color schemes.
@@ -151,7 +167,7 @@ Integrate Ghostty as the default terminal emulator with matching typography, pad
 
 ---
 
-## Milestone v1.0 — Automated Installer & Tooling
+## Milestone v1.1 — Automated Installer & Tooling
 
 ### Goals
 Build a reliable, user-friendly installation and update utility suite.

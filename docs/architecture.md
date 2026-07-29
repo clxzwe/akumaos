@@ -1,7 +1,7 @@
 # AkumaOS Architecture
 
 ## Overview
-AkumaOS is designed around a modular, decoupled architecture where design tokens, configuration schemas, script generator engines, visual assets, and theme templates are cleanly separated. This architectural design ensures maintainability, ease of customization, and predictable behavior across different hardware environments.
+AkumaOS is designed around a modular, decoupled architecture where design tokens, configuration schemas, compilation generator engines, visual assets, and theme templates are cleanly separated. This architectural design ensures maintainability, ease of customization, and predictable behavior across different hardware environments.
 
 ---
 
@@ -13,6 +13,7 @@ AkumaOS/
 ├── assets/               # Branding assets, icons, previews, and screenshots
 ├── config/               # Compositor, bar, launcher, and daemon configurations
 ├── docs/                 # Product architecture, design system, installation & roadmap
+├── generator/            # Generator engine architecture (src, templates, output, tests)
 ├── schema/               # Declarative configuration schemas (theme, desktop, modules, keybinds)
 ├── scripts/              # System management, installation, and utility scripts
 ├── tests/                # Automated testing suites for configurations and installation
@@ -31,6 +32,7 @@ AkumaOS/
 | `assets/` | Static media assets including AkumaOS branding, logo vectors, screenshots, and UI previews. |
 | `config/` | Application configuration subdirectories for Hyprland, Waybar, Ghostty, Hyprlock, Hypridle, Wofi, Mako, and SwayOSD. |
 | `docs/` | Comprehensive technical documentation, architectural blueprints, design guidelines, and user manuals. |
+| `generator/` | Compilation generator architecture (`generator/src/`, `templates/`, `output/`, `tests/`). |
 | `schema/` | Declarative configuration schemas (`theme.schema.md`, `desktop.schema.md`, `modules.schema.md`, `keybinds.schema.md`). |
 | `scripts/` | Shell entry points for installation, updates, bootstrapping, and environment switching. |
 | `tests/` | Test suites for configuration syntax validation (`tests/config/`) and installer testing (`tests/install/`). |
@@ -45,7 +47,7 @@ AkumaOS/
 The AkumaOS configuration pipeline processes declarations through a structured, multi-tier flow:
 
 ```text
-Tokens (themes/tokens/) → Schema (schema/) → Generators (scripts/ & tools/) → Native Configs (config/)
+Design Tokens → Configuration Schema → Generator → Native Configurations → Linux Desktop
 ```
 
 ```mermaid
@@ -55,20 +57,24 @@ flowchart TD
     end
 
     subgraph Layer 2: Schema
-        SCH[Declarative Configuration Schema]
+        SCH[Configuration Schema]
     end
 
-    subgraph Layer 3: Generators
-        GEN[Script Generator Engine]
+    subgraph Layer 3: Generator
+        GEN[Generator Engine]
     end
 
-    subgraph Layer 4: Configs
-        HYPR[Hyprland Config]
-        WAY[Waybar Config]
-        WOFI[Wofi Config]
-        GHOST[Ghostty Config]
-        MAKO[Mako Notification Config]
-        LOCK[Hyprlock & Hypridle Config]
+    subgraph Layer 4: Native Configurations
+        HYPR[config/hypr/]
+        WAY[config/waybar/]
+        WOFI[config/wofi/]
+        GHOST[config/ghostty/]
+        MAKO[config/mako/]
+        LOCK[config/hyprlock/ & hypridle/]
+    end
+
+    subgraph Layer 5: Linux Desktop
+        DESK[Wayland Compositor & Daemons]
     end
 
     TOK --> SCH
@@ -79,19 +85,26 @@ flowchart TD
     GEN --> GHOST
     GEN --> MAKO
     GEN --> LOCK
+    HYPR --> DESK
+    WAY --> DESK
+    WOFI --> DESK
+    GHOST --> DESK
+    MAKO --> DESK
+    LOCK --> DESK
 ```
 
 ### Pipeline Stages:
-1. **Tokens (`themes/tokens/`)**: Define raw visual design tokens (colors, spacing, typography, radius, shadows, blur, animations).
-2. **Schema (`schema/`)**: Structures design tokens and user preferences into validatable YAML schemas (`theme`, `desktop`, `modules`, `keybinds`).
-3. **Generators (`scripts/` & `tools/`)**: Parses YAML schemas and compiles native, application-specific configuration files.
-4. **Native Configs (`config/`)**: Deploys compiled native configs to target applications via dynamic IPC reloads.
+1. **Design Tokens (`themes/tokens/`)**: Define raw visual design tokens (colors, spacing, typography, radius, shadows, blur, animations).
+2. **Configuration Schema (`schema/`)**: Structures design tokens and user preferences into validatable YAML schemas (`theme`, `desktop`, `modules`, `keybinds`).
+3. **Generator (`generator/`)**: Parses YAML schemas and compiles native, application-specific configuration files via `generator/templates/`.
+4. **Native Configurations (`config/`)**: Output staging directory holding compiled application configs.
+5. **Linux Desktop**: Application runtime environment receiving reloaded configurations via dynamic IPC calls.
 
 ---
 
 ## Theme System Architecture
 
-The AkumaOS theme system decouples visual styling from component configurations via the schema layer:
+The AkumaOS theme system decouples visual styling from component configurations via the schema and generator layers:
 
 ```mermaid
 graph LR
@@ -103,15 +116,19 @@ graph LR
         S[Theme Schema]
     end
 
-    subgraph Generators
-        G[Theme Generator Engine]
+    subgraph Generator
+        G[Generator Engine]
     end
 
-    subgraph Configs
+    subgraph Native Configs
         CSS[Waybar & Wofi CSS]
         HYPR[Hyprland Colors]
         TERM[Ghostty Theme]
         NOTIF[Mako Style]
+    end
+
+    subgraph Linux Desktop
+        D[Desktop UI Environment]
     end
 
     P --> S
@@ -120,10 +137,14 @@ graph LR
     G --> HYPR
     G --> TERM
     G --> NOTIF
+    CSS --> D
+    HYPR --> D
+    TERM --> D
+    NOTIF --> D
 ```
 
 - **Declarative Schema**: Theme variables are validated against `schema/theme.schema.md`.
-- **Dynamic Application**: Generator scripts compile these schemas into runtime configuration files for active desktop applications.
+- **Generator Compilation**: Generator engine compiles these schemas into runtime configuration files for active desktop applications.
 
 ---
 
