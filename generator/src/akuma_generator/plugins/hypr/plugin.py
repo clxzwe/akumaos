@@ -4,13 +4,11 @@ from pathlib import Path
 from typing import Any, Dict
 
 from akuma_generator.core.base_plugin import BasePlugin
-from akuma_generator.core.loader import load_yaml
-from akuma_generator.core.renderer import render_template
-from akuma_generator.core.validator import validate_desktop_config
+from akuma_generator.plugins.hypr.component_registry import ComponentRegistry
 
 
 class HyprPlugin(BasePlugin):
-    """Plugin for generating Hyprland compositor configurations."""
+    """Plugin for generating Hyprland configurations via component dispatch."""
 
     @property
     def name(self) -> str:
@@ -18,13 +16,14 @@ class HyprPlugin(BasePlugin):
         return "hypr"
 
     def load(self, project_root: Path, component: str, **kwargs: Any) -> Dict[str, Any]:
-        """Load raw configuration data for Hyprland component."""
-        config_path = project_root / "examples" / "desktop.yaml"
-        return load_yaml(config_path)
+        """Delegate load stage to registered sub-component."""
+        comp_obj = ComponentRegistry.get(component)
+        return comp_obj.load(project_root)
 
     def validate(self, raw_data: Dict[str, Any], component: str, **kwargs: Any) -> Any:
-        """Validate raw data against DesktopModel schema."""
-        return validate_desktop_config(raw_data)
+        """Delegate validate stage to registered sub-component."""
+        comp_obj = ComponentRegistry.get(component)
+        return comp_obj.validate(raw_data)
 
     def render(
         self,
@@ -33,30 +32,32 @@ class HyprPlugin(BasePlugin):
         project_root: Path,
         **kwargs: Any,
     ) -> str:
-        """Render Hyprland component template."""
-        if component == "monitors":
-            template_path = (
-                project_root / "generator" / "templates" / "monitors.conf.j2"
-            )
-            context = {"monitors": [m.model_dump() for m in validated_data.monitors]}
-        elif component == "environment":
-            template_path = project_root / "generator" / "templates" / "env.conf.j2"
-            context = {"environment": validated_data.environment}
-        else:
-            raise ValueError(f"Unsupported Hyprland component: {component}")
-
-        return render_template(template_path, context)
+        """Delegate render stage to registered sub-component."""
+        comp_obj = ComponentRegistry.get(component)
+        return comp_obj.render(validated_data, project_root)
 
     def get_output_path(self, project_root: Path, component: str) -> Path:
-        """Get output file destination for Hyprland component."""
-        if component == "monitors":
-            filename = "monitors.conf"
-        elif component == "environment":
-            filename = "env.conf"
-        else:
-            filename = f"{component}.conf"
+        """Delegate output path determination to registered sub-component."""
+        comp_obj = ComponentRegistry.get(component)
+        return comp_obj.get_output_path(project_root)
 
-        return project_root / "config" / "hypr" / "generated" / filename
+    def generate(
+        self,
+        project_root: Path,
+        component: str,
+        dry_run: bool = False,
+        backup: bool = False,
+        overwrite: bool = True,
+        **kwargs: Any,
+    ) -> Path:
+        """Dispatch component generation to target registered sub-component."""
+        comp_obj = ComponentRegistry.get(component)
+        return comp_obj.generate(
+            project_root=project_root,
+            dry_run=dry_run,
+            backup=backup,
+            overwrite=overwrite,
+        )
 
     @classmethod
     def generate_monitors(cls, project_root: Path) -> Path:
