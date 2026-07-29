@@ -1,7 +1,7 @@
 # AkumaOS Architecture
 
 ## Overview
-AkumaOS is designed around a modular, decoupled architecture where configuration declarations, script engines, visual assets, and theme templates are cleanly separated. This architectural design ensures maintainability, ease of customization, and predictable behavior across different hardware environments.
+AkumaOS is designed around a modular, decoupled architecture where design tokens, configuration schemas, script generator engines, visual assets, and theme templates are cleanly separated. This architectural design ensures maintainability, ease of customization, and predictable behavior across different hardware environments.
 
 ---
 
@@ -13,6 +13,7 @@ AkumaOS/
 ├── assets/               # Branding assets, icons, previews, and screenshots
 ├── config/               # Compositor, bar, launcher, and daemon configurations
 ├── docs/                 # Product architecture, design system, installation & roadmap
+├── schema/               # Declarative configuration schemas (theme, desktop, modules, keybinds)
 ├── scripts/              # System management, installation, and utility scripts
 ├── tests/                # Automated testing suites for configurations and installation
 ├── themes/               # Centralized theme definitions and design token specifications
@@ -30,6 +31,7 @@ AkumaOS/
 | `assets/` | Static media assets including AkumaOS branding, logo vectors, screenshots, and UI previews. |
 | `config/` | Application configuration subdirectories for Hyprland, Waybar, Ghostty, Hyprlock, Hypridle, Wofi, Mako, and SwayOSD. |
 | `docs/` | Comprehensive technical documentation, architectural blueprints, design guidelines, and user manuals. |
+| `schema/` | Declarative configuration schemas (`theme.schema.md`, `desktop.schema.md`, `modules.schema.md`, `keybinds.schema.md`). |
 | `scripts/` | Shell entry points for installation, updates, bootstrapping, and environment switching. |
 | `tests/` | Test suites for configuration syntax validation (`tests/config/`) and installer testing (`tests/install/`). |
 | `themes/` | Central theme definitions (`themes/default/`) and abstract design token specifications (`themes/tokens/`). |
@@ -38,25 +40,90 @@ AkumaOS/
 
 ---
 
-## Configuration Flow Architecture
+## Configuration Pipeline & Flow Architecture
 
-The AkumaOS configuration flow follows a centralized declaration model. Global variables and active theme tokens originate in the theme layer and script environment, propagating downstream to individual component configurations.
+The AkumaOS configuration pipeline processes declarations through a structured, multi-tier flow:
+
+```text
+Tokens (themes/tokens/) → Schema (schema/) → Generators (scripts/ & tools/) → Native Configs (config/)
+```
 
 ```mermaid
 flowchart TD
-    A[AkumaOS Theme / Palette] --> B[Bootstrap / Switcher Script]
-    B --> C[Hyprland Compositor Config]
-    B --> D[Waybar Status Bar Config]
-    B --> E[Wofi Launcher Config]
-    B --> F[Ghostty Terminal Config]
-    B --> G[Mako Notification Config]
-    B --> H[Hyprlock & Hypridle Config]
+    subgraph Layer 1: Tokens
+        TOK[Design Tokens]
+    end
+
+    subgraph Layer 2: Schema
+        SCH[Declarative Configuration Schema]
+    end
+
+    subgraph Layer 3: Generators
+        GEN[Script Generator Engine]
+    end
+
+    subgraph Layer 4: Configs
+        HYPR[Hyprland Config]
+        WAY[Waybar Config]
+        WOFI[Wofi Config]
+        GHOST[Ghostty Config]
+        MAKO[Mako Notification Config]
+        LOCK[Hyprlock & Hypridle Config]
+    end
+
+    TOK --> SCH
+    SCH --> GEN
+    GEN --> HYPR
+    GEN --> WAY
+    GEN --> WOFI
+    GEN --> GHOST
+    GEN --> MAKO
+    GEN --> LOCK
 ```
 
-### Flow Lifecycle:
-1. **Selection**: User or system triggers a theme, wallpaper, or layout change via `scripts/`.
-2. **Parsing**: The script engine reads the central configuration tokens from `themes/`.
-3. **Application**: Configurations in `config/` are updated or reloaded dynamically via IPC signals (e.g., `hyprctl reload`, `makoctl reload`).
+### Pipeline Stages:
+1. **Tokens (`themes/tokens/`)**: Define raw visual design tokens (colors, spacing, typography, radius, shadows, blur, animations).
+2. **Schema (`schema/`)**: Structures design tokens and user preferences into validatable YAML schemas (`theme`, `desktop`, `modules`, `keybinds`).
+3. **Generators (`scripts/` & `tools/`)**: Parses YAML schemas and compiles native, application-specific configuration files.
+4. **Native Configs (`config/`)**: Deploys compiled native configs to target applications via dynamic IPC reloads.
+
+---
+
+## Theme System Architecture
+
+The AkumaOS theme system decouples visual styling from component configurations via the schema layer:
+
+```mermaid
+graph LR
+    subgraph Tokens
+        P[Design Tokens]
+    end
+
+    subgraph Schema
+        S[Theme Schema]
+    end
+
+    subgraph Generators
+        G[Theme Generator Engine]
+    end
+
+    subgraph Configs
+        CSS[Waybar & Wofi CSS]
+        HYPR[Hyprland Colors]
+        TERM[Ghostty Theme]
+        NOTIF[Mako Style]
+    end
+
+    P --> S
+    S --> G
+    G --> CSS
+    G --> HYPR
+    G --> TERM
+    G --> NOTIF
+```
+
+- **Declarative Schema**: Theme variables are validated against `schema/theme.schema.md`.
+- **Dynamic Application**: Generator scripts compile these schemas into runtime configuration files for active desktop applications.
 
 ---
 
@@ -69,36 +136,6 @@ The `scripts/` directory contains executable entry points for environment lifecy
 - `uninstall.sh`: Safe uninstallation script that restores pre-existing configuration backups.
 - `update.sh`: Synchronizes local configuration with upstream repository updates while preserving user customizations.
 - `wallpaper.sh`: Wallpaper switcher script that handles wallpaper selection, blur generation, and color synchronization.
-
----
-
-## Theme System Architecture
-
-The AkumaOS theme system decouples visual styling from component configurations:
-
-```mermaid
-graph LR
-    subgraph Theme Core
-        T[Theme Definition]
-        P[Palette Tokens]
-    end
-
-    subgraph Generated Styles
-        CSS[Waybar & Wofi CSS]
-        HYPR[Hyprland Colors]
-        TERM[Ghostty Theme]
-        NOTIF[Mako Style]
-    end
-
-    T --> P
-    P --> CSS
-    P --> HYPR
-    P --> TERM
-    P --> NOTIF
-```
-
-- **Centralized Tokens**: Color definitions, padding metrics, border radii, and font declarations are declared as standardized variables.
-- **Dynamic Application**: Scripts parse these tokens to generate runtime configuration files or update environment variables for active desktop applications.
 
 ---
 

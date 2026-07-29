@@ -38,10 +38,26 @@ Define abstract, reusable design token specifications across colors, spacing, ty
 
 ---
 
-## Milestone v0.3 — Hyprland Core
+## Milestone v0.3 — Configuration Schema Foundation (Completed)
 
 ### Goals
-Build the foundational Hyprland compositor configuration focused on window management, input rules, monitor layouts, and keybindings based on design token standards.
+Establish declarative YAML configuration schema specifications for themes, desktop settings, component modules, and keybindings prior to generator engine and compositor implementation.
+
+### Deliverables
+- Schema specification suite (`schema/theme.schema.md`, `desktop.schema.md`, `modules.schema.md`, `keybinds.schema.md`).
+- Schema overview documentation (`schema/README.md`).
+- Updated architectural blueprint documenting the `Tokens -> Schema -> Generators -> Configs` multi-tier pipeline.
+
+### Exit Criteria
+- Declarative schemas fully documented using YAML specifications.
+- Architecture and roadmap updated to reflect the schema pipeline tier.
+
+---
+
+## Milestone v0.4 — Hyprland Core
+
+### Goals
+Build the foundational Hyprland compositor configuration focused on window management, input rules, monitor layouts, and keybindings based on design token and schema standards.
 
 ### Deliverables
 - Core Hyprland configuration structure (`config/hypr/`).
@@ -55,7 +71,7 @@ Build the foundational Hyprland compositor configuration focused on window manag
 
 ---
 
-## Milestone v0.4 — Waybar Status Bar
+## Milestone v0.5 — Waybar Status Bar
 
 ### Goals
 Design and configure a modular status bar using Waybar that aligns with the AkumaOS design language and token metrics.
@@ -71,7 +87,7 @@ Design and configure a modular status bar using Waybar that aligns with the Akum
 
 ---
 
-## Milestone v0.5 — Application Launcher (Wofi)
+## Milestone v0.6 — Application Launcher (Wofi)
 
 ### Goals
 Implement a fast, keyboard-driven application launcher and menu system using Wofi.
@@ -87,7 +103,7 @@ Implement a fast, keyboard-driven application launcher and menu system using Wof
 
 ---
 
-## Milestone v0.6 — Wallpaper Engine
+## Milestone v0.7 — Wallpaper Engine
 
 ### Goals
 Construct a wallpaper management system capable of background setting, collection switching, and visual synchronization.
@@ -103,7 +119,7 @@ Construct a wallpaper management system capable of background setting, collectio
 
 ---
 
-## Milestone v0.7 — Screen Lock & Power Management (Hyprlock & Hypridle)
+## Milestone v0.8 — Screen Lock & Power Management (Hyprlock & Hypridle)
 
 ### Goals
 Provide secure screen locking, session idling, and power management integrated with the desktop design system.
@@ -119,7 +135,7 @@ Provide secure screen locking, session idling, and power management integrated w
 
 ---
 
-## Milestone v0.8 — Terminal Emulator (Ghostty)
+## Milestone v0.9 — Terminal Emulator (Ghostty)
 
 ### Goals
 Integrate Ghostty as the default terminal emulator with matching typography, padding, and color schemes.
@@ -135,7 +151,7 @@ Integrate Ghostty as the default terminal emulator with matching typography, pad
 
 ---
 
-## Milestone v0.9 — Automated Installer & Tooling
+## Milestone v1.0 — Automated Installer & Tooling
 
 ### Goals
 Build a reliable, user-friendly installation and update utility suite.
@@ -148,19 +164,3 @@ Build a reliable, user-friendly installation and update utility suite.
 ### Exit Criteria
 - Installation script executes cleanly on target Arch/Linux systems.
 - Existing user files are backed up safely prior to deployment.
-
----
-
-## Milestone v1.0 — Stable Release
-
-### Goals
-Publish the official v1.0 release of AkumaOS desktop environment.
-
-### Deliverables
-- Tagged v1.0 release on GitHub.
-- Finalized installation script and documentation suite.
-- Official release announcement and screenshots showcase.
-
-### Exit Criteria
-- All previous milestone deliverables fully merged and verified.
-- Production-ready stability and performance.
