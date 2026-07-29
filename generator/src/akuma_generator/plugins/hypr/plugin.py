@@ -1,7 +1,7 @@
 """Hyprland compositor plugin implementation."""
 
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from akuma_generator.core.base_plugin import BasePlugin
 from akuma_generator.plugins.hypr.component_registry import ComponentRegistry
@@ -36,10 +36,12 @@ class HyprPlugin(BasePlugin):
         comp_obj = ComponentRegistry.get(component)
         return comp_obj.render(validated_data, project_root)
 
-    def get_output_path(self, project_root: Path, component: str) -> Path:
+    def get_output_path(
+        self, project_root: Path, component: str, output_dir: Optional[Path] = None
+    ) -> Path:
         """Delegate output path determination to registered sub-component."""
         comp_obj = ComponentRegistry.get(component)
-        return comp_obj.get_output_path(project_root)
+        return comp_obj.get_output_path(project_root, output_dir=output_dir)
 
     def generate(
         self,
@@ -48,6 +50,7 @@ class HyprPlugin(BasePlugin):
         dry_run: bool = False,
         backup: bool = False,
         overwrite: bool = True,
+        output_dir: Optional[Path] = None,
         **kwargs: Any,
     ) -> Path:
         """Dispatch component generation to target registered sub-component."""
@@ -57,6 +60,7 @@ class HyprPlugin(BasePlugin):
             dry_run=dry_run,
             backup=backup,
             overwrite=overwrite,
+            output_dir=output_dir,
         )
 
     @classmethod

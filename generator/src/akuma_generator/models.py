@@ -90,7 +90,7 @@ class AutostartModel(BaseModel):
             "swayosd-server",
         ]
     )
-    wallpaper_path: str = "~/Pictures/Wallpapers/default.jpg"
+    wallpaper_path: str = "/home/akuma/Downloads/plana-blue-archive-1-moewalls-com.mp4"
 
 
 class EnvironmentModel(BaseModel):

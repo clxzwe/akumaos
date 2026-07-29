@@ -54,4 +54,4 @@ autostart:
     - mako
     - swww-daemon
     - swayosd-server
-  wallpaper_path: "~/Pictures/Wallpapers/default.jpg"
+  wallpaper_path: "/home/akuma/Downloads/plana-blue-archive-1-moewalls-com.mp4"

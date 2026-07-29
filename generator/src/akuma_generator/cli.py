@@ -5,6 +5,12 @@ from typing import Optional
 
 import typer
 
+from akuma_generator.core.deployment import (
+    apply_desktop_config,
+    check_dependencies,
+    create_backup,
+    restore_newest_backup,
+)
 from akuma_generator.core.logger import setup_logger
 from akuma_generator.core.plugin_manager import PluginManager
 from akuma_generator.plugins.hypr.component_registry import ComponentRegistry
@@ -78,6 +84,94 @@ def generate(
 
     if not dry_run:
         typer.echo("Done.")
+
+
+@app.command("doctor")
+def doctor(
+    verbose: bool = typer.Option(
+        False,
+        "--verbose",
+        "-v",
+        help="Enable verbose debug logging",
+    ),
+) -> None:
+    """Check for required desktop dependencies."""
+    setup_logger(verbose=verbose)
+    typer.echo("AkumaOS Dependency Check:")
+    deps = check_dependencies()
+    for dep, is_installed in deps:
+        if is_installed:
+            typer.echo(f"✓ Installed  {dep}")
+        else:
+            typer.echo(f"✗ Missing    {dep}")
+
+
+@app.command("apply")
+def apply(
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        help="Simulate application without writing files or reloading",
+    ),
+    verbose: bool = typer.Option(
+        False,
+        "--verbose",
+        "-v",
+        help="Enable verbose debug logging",
+    ),
+) -> None:
+    """Apply generated configuration to local Hyprland environment."""
+    setup_logger(verbose=verbose)
+    root = _find_project_root()
+    apply_desktop_config(project_root=root, dry_run=dry_run)
+    if not dry_run:
+        typer.echo("✓ Configuration applied successfully.")
+
+
+@app.command("backup")
+def backup(
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        help="Simulate backup creation without writing files",
+    ),
+    verbose: bool = typer.Option(
+        False,
+        "--verbose",
+        "-v",
+        help="Enable verbose debug logging",
+    ),
+) -> None:
+    """Create timestamped backup of current Hyprland configuration."""
+    setup_logger(verbose=verbose)
+    backup_path = create_backup(dry_run=dry_run)
+    if not dry_run:
+        typer.echo(f"✓ Backup created at: {backup_path}")
+
+
+@app.command("restore")
+def restore(
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        help="Simulate restoration without modifying disk",
+    ),
+    verbose: bool = typer.Option(
+        False,
+        "--verbose",
+        "-v",
+        help="Enable verbose debug logging",
+    ),
+) -> None:
+    """Restore the newest backup configuration."""
+    setup_logger(verbose=verbose)
+    restored = restore_newest_backup(dry_run=dry_run)
+    if restored:
+        if not dry_run:
+            typer.echo(f"✓ Restored configuration from: {restored}")
+    else:
+        typer.echo("✗ No backup found to restore.")
+        raise typer.Exit(code=1)
 
 
 if __name__ == "__main__":

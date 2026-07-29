@@ -2,7 +2,7 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from akuma_generator.core.output import OutputManager
 
@@ -32,7 +32,9 @@ class HyprComponent(ABC):
         pass
 
     @abstractmethod
-    def get_output_path(self, project_root: Path) -> Path:
+    def get_output_path(
+        self, project_root: Path, output_dir: Optional[Path] = None
+    ) -> Path:
         """Get output destination path for this component."""
         pass
 
@@ -42,12 +44,13 @@ class HyprComponent(ABC):
         dry_run: bool = False,
         backup: bool = False,
         overwrite: bool = True,
+        output_dir: Optional[Path] = None,
     ) -> Path:
         """Execute full component generation lifecycle."""
         raw_data = self.load(project_root)
         validated_data = self.validate(raw_data)
         rendered_content = self.render(validated_data, project_root)
-        output_path = self.get_output_path(project_root)
+        output_path = self.get_output_path(project_root, output_dir=output_dir)
         return OutputManager.write(
             rendered_content,
             output_path,

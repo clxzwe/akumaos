@@ -1,7 +1,7 @@
 """Hyprland input configuration component."""
 
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from akuma_generator.core.loader import load_yaml
 from akuma_generator.core.renderer import render_template
@@ -10,7 +10,7 @@ from akuma_generator.plugins.hypr.components.base import HyprComponent
 
 
 class InputComponent(HyprComponent):
-    """Component for generating Hyprland input configuration."""
+    """Component for generating Hyprland input device configuration."""
 
     @property
     def name(self) -> str:
@@ -29,9 +29,14 @@ class InputComponent(HyprComponent):
     def render(self, validated_data: Any, project_root: Path) -> str:
         """Render input Jinja2 template."""
         template_path = project_root / "generator" / "templates" / "input.conf.j2"
+        if not template_path.exists():
+            template_path = project_root / "templates" / "input.conf.j2"
         context = {"input": validated_data.input}
         return render_template(template_path, context)
 
-    def get_output_path(self, project_root: Path) -> Path:
+    def get_output_path(
+        self, project_root: Path, output_dir: Optional[Path] = None
+    ) -> Path:
         """Get output destination path for input.conf."""
-        return project_root / "config" / "hypr" / "generated" / "input.conf"
+        target_dir = output_dir or (Path.home() / ".config" / "hypr" / "config")
+        return target_dir / "input.conf"

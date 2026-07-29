@@ -1,4 +1,4 @@
-"""Unit tests for all Sprint 1 Hyprland components."""
+"""Unit tests for Hyprland components registration and generation."""
 
 from pathlib import Path
 
@@ -11,7 +11,7 @@ runner = CliRunner()
 
 
 def test_all_components_registered():
-    """Test that all 9 components are registered in ComponentRegistry."""
+    """Test that all 11 components are registered in ComponentRegistry."""
     ComponentRegistry.clear()
     components = ComponentRegistry.list_components()
     expected = [
@@ -21,17 +21,22 @@ def test_all_components_registered():
         "decoration",
         "environment",
         "general",
+        "groups",
         "hyprland",
         "input",
         "monitors",
+        "rules",
     ]
     assert components == expected
 
 
-def test_cli_generate_default_all(monkeypatch):
+def test_cli_generate_default_all(tmp_path, monkeypatch):
     """Test calling `akuma generate` without flags generates all components."""
     repo_root = Path(__file__).resolve().parent.parent.parent
     monkeypatch.chdir(repo_root)
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setattr(Path, "home", lambda: fake_home)
 
     result = runner.invoke(app, ["generate"])
     assert result.exit_code == 0
@@ -42,20 +47,25 @@ def test_cli_generate_default_all(monkeypatch):
     assert "✓ decoration" in result.stdout
     assert "✓ environment" in result.stdout
     assert "✓ general" in result.stdout
+    assert "✓ groups" in result.stdout
     assert "✓ hyprland" in result.stdout
     assert "✓ input" in result.stdout
     assert "✓ monitors" in result.stdout
+    assert "✓ rules" in result.stdout
     assert "Done." in result.stdout
 
 
-def test_component_outputs_exist(monkeypatch):
-    """Test that all generated output files exist with non-empty content."""
+def test_component_outputs_exist(tmp_path, monkeypatch):
+    """Test generated output files exist in ~/.config/hypr/config."""
     repo_root = Path(__file__).resolve().parent.parent.parent
     monkeypatch.chdir(repo_root)
+    fake_home = tmp_path / "home"
+    fake_home.mkdir()
+    monkeypatch.setattr(Path, "home", lambda: fake_home)
 
     runner.invoke(app, ["generate"])
 
-    gen_dir = repo_root / "config" / "hypr" / "generated"
+    config_dir = fake_home / ".config" / "hypr" / "config"
     for comp_file in [
         "monitors.conf",
         "env.conf",
@@ -65,8 +75,13 @@ def test_component_outputs_exist(monkeypatch):
         "animations.conf",
         "autostart.conf",
         "binds.conf",
-        "hyprland.conf",
+        "groups.conf",
+        "rules.conf",
     ]:
-        path = gen_dir / comp_file
+        path = config_dir / comp_file
         assert path.exists(), f"Missing output file: {comp_file}"
         assert path.stat().st_size > 0, f"Empty output file: {comp_file}"
+
+    master_path = fake_home / ".config" / "hypr" / "hyprland.conf"
+    assert master_path.exists(), "Missing master hyprland.conf"
+    assert master_path.stat().st_size > 0

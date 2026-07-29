@@ -116,6 +116,20 @@ class ComponentRegistry:
 
             cls.register(BindsComponent)
 
+        if "groups" not in cls._registry:
+            from akuma_generator.plugins.hypr.components.groups import (
+                GroupsComponent,
+            )
+
+            cls.register(GroupsComponent)
+
+        if "rules" not in cls._registry:
+            from akuma_generator.plugins.hypr.components.rules import (
+                RulesComponent,
+            )
+
+            cls.register(RulesComponent)
+
         if "hyprland" not in cls._registry:
             from akuma_generator.plugins.hypr.components.master import (
                 HyprlandConfigComponent,

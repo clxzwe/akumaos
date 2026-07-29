@@ -1,4 +1,8 @@
 {% for service in autostart.services %}
+{% if service != 'swww-daemon' %}
 exec-once = {{ service }}
+{% endif %}
 {% endfor %}
-exec-once = bash -c 'if [ -f {{ autostart.wallpaper_path }} ]; then swww img {{ autostart.wallpaper_path }}; fi'
+{% if mpvpaper_installed %}
+exec-once = mpvpaper '*' {{ wallpaper_path }}
+{% endif %}

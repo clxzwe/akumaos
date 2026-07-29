@@ -1,7 +1,7 @@
 """Hyprland decoration configuration component."""
 
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from akuma_generator.core.loader import load_yaml
 from akuma_generator.core.renderer import render_template
@@ -29,9 +29,14 @@ class DecorationComponent(HyprComponent):
     def render(self, validated_data: Any, project_root: Path) -> str:
         """Render decoration Jinja2 template."""
         template_path = project_root / "generator" / "templates" / "decoration.conf.j2"
+        if not template_path.exists():
+            template_path = project_root / "templates" / "decoration.conf.j2"
         context = {"decoration": validated_data.decoration}
         return render_template(template_path, context)
 
-    def get_output_path(self, project_root: Path) -> Path:
+    def get_output_path(
+        self, project_root: Path, output_dir: Optional[Path] = None
+    ) -> Path:
         """Get output destination path for decoration.conf."""
-        return project_root / "config" / "hypr" / "generated" / "decoration.conf"
+        target_dir = output_dir or (Path.home() / ".config" / "hypr" / "config")
+        return target_dir / "decoration.conf"
