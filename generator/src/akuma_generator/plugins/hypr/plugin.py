@@ -1,38 +1,47 @@
 """Hyprland compositor plugin implementation."""
 
 from pathlib import Path
+from typing import Any, Dict
 
+from akuma_generator.core.base_plugin import BasePlugin
 from akuma_generator.core.loader import load_yaml
 from akuma_generator.core.renderer import render_template
 from akuma_generator.core.validator import validate_desktop_config
 
 
-class HyprPlugin:
+class HyprPlugin(BasePlugin):
     """Plugin for generating Hyprland compositor configurations."""
 
-    @staticmethod
-    def generate_monitors(project_root: Path) -> Path:
-        """Generate Hyprland monitors configuration file.
+    @property
+    def name(self) -> str:
+        """Plugin component name."""
+        return "hypr"
 
-        Args:
-            project_root: Root directory of the AkumaOS repository.
-
-        Returns:
-            Path: Path to the generated monitors configuration file.
-        """
+    def load(self, project_root: Path, component: str, **kwargs: Any) -> Dict[str, Any]:
+        """Load raw configuration data for Hyprland component."""
         config_path = project_root / "examples" / "desktop.yaml"
-        template_path = project_root / "generator" / "templates" / "monitors.conf.j2"
-        output_dir = project_root / "config" / "hypr" / "generated"
-        output_file = output_dir / "monitors.conf"
+        return load_yaml(config_path)
 
-        raw_data = load_yaml(config_path)
-        validated_desktop = validate_desktop_config(raw_data)
+    def validate(self, raw_data: Dict[str, Any], component: str, **kwargs: Any) -> Any:
+        """Validate raw data against DesktopModel schema."""
+        return validate_desktop_config(raw_data)
 
-        context = {"monitors": [m.model_dump() for m in validated_desktop.monitors]}
-        rendered_content = render_template(template_path, context)
+    def render(
+        self, validated_data: Any, component: str, project_root: Path, **kwargs: Any
+    ) -> str:
+        """Render Hyprland template."""
+        template_path = (
+            project_root / "generator" / "templates" / f"{component}.conf.j2"
+        )
+        context = {"monitors": [m.model_dump() for m in validated_data.monitors]}
+        return render_template(template_path, context)
 
-        output_dir.mkdir(parents=True, exist_ok=True)
-        with open(output_file, "w", encoding="utf-8") as f:
-            f.write(rendered_content)
+    def get_output_path(self, project_root: Path, component: str) -> Path:
+        """Get output file destination for Hyprland component."""
+        return project_root / "config" / "hypr" / "generated" / f"{component}.conf"
 
-        return output_file
+    @classmethod
+    def generate_monitors(cls, project_root: Path) -> Path:
+        """Backward-compatible helper method for monitor generation."""
+        instance = cls()
+        return instance.generate(project_root, component="monitors")

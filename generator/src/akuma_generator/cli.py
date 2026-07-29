@@ -4,7 +4,7 @@ from pathlib import Path
 
 import typer
 
-from akuma_generator.plugins.hypr import HyprPlugin
+from akuma_generator.core.plugin_manager import PluginManager
 
 app = typer.Typer(
     name="akuma",
@@ -39,9 +39,11 @@ def generate(
     ),
 ) -> None:
     """Generate configuration files for AkumaOS components."""
+    root = _find_project_root()
+
     if component == "monitors":
-        root = _find_project_root()
-        output_file = HyprPlugin.generate_monitors(root)
+        plugin = PluginManager.get("hypr")
+        output_file = plugin.generate(project_root=root, component="monitors")
         typer.echo(f"Generated: {output_file.relative_to(root)}")
     else:
         typer.echo(f"Unknown component: {component}")
