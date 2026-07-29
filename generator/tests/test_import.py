@@ -1,7 +1,9 @@
 """Test import and package initialization for akuma_generator."""
 
 import akuma_generator
-from akuma_generator import cli, loader, models, renderer, validator
+from akuma_generator import cli, models
+from akuma_generator.core import loader, renderer, validator
+from akuma_generator.plugins.hypr import HyprPlugin
 
 
 def test_package_import() -> None:
@@ -10,9 +12,10 @@ def test_package_import() -> None:
 
 
 def test_modules_import() -> None:
-    """Test that all core submodules import successfully."""
+    """Test that all core submodules and plugins import successfully."""
     assert cli.app is not None
     assert hasattr(loader, "load_theme")
     assert hasattr(validator, "validate_theme")
     assert hasattr(renderer, "render_template")
     assert hasattr(models, "ThemeModel")
+    assert hasattr(HyprPlugin, "generate_monitors")

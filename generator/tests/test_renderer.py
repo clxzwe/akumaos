@@ -1,6 +1,6 @@
 """Tests for the template renderer module."""
 
-from akuma_generator.renderer import render_template
+from akuma_generator.core.renderer import render_template
 
 
 def test_render_template(tmp_path):

@@ -3,7 +3,7 @@
 import pytest
 from pydantic import ValidationError
 
-from akuma_generator.validator import validate_desktop_config
+from akuma_generator.core.validator import validate_desktop_config
 
 
 def test_validate_desktop_config_valid():

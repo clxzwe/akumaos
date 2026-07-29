@@ -2,7 +2,7 @@
 
 import pytest
 
-from akuma_generator.loader import load_yaml
+from akuma_generator.core.loader import load_yaml
 
 
 def test_load_yaml_valid(tmp_path):

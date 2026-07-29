@@ -4,9 +4,7 @@ from pathlib import Path
 
 import typer
 
-from akuma_generator.loader import load_yaml
-from akuma_generator.renderer import render_template
-from akuma_generator.validator import validate_desktop_config
+from akuma_generator.plugins.hypr import HyprPlugin
 
 app = typer.Typer(
     name="akuma",
@@ -43,21 +41,7 @@ def generate(
     """Generate configuration files for AkumaOS components."""
     if component == "monitors":
         root = _find_project_root()
-        config_path = root / "examples" / "desktop.yaml"
-        template_path = root / "generator" / "templates" / "monitors.conf.j2"
-        output_dir = root / "config" / "hypr" / "generated"
-        output_file = output_dir / "monitors.conf"
-
-        raw_data = load_yaml(config_path)
-        validated_desktop = validate_desktop_config(raw_data)
-
-        context = {"monitors": [m.model_dump() for m in validated_desktop.monitors]}
-        rendered_content = render_template(template_path, context)
-
-        output_dir.mkdir(parents=True, exist_ok=True)
-        with open(output_file, "w", encoding="utf-8") as f:
-            f.write(rendered_content)
-
+        output_file = HyprPlugin.generate_monitors(root)
         typer.echo(f"Generated: {output_file.relative_to(root)}")
     else:
         typer.echo(f"Unknown component: {component}")
