@@ -1,0 +1,48 @@
+# Linux & System
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.log
+
+# Hyprland & Runtime
+hyprland.log
+*.crash
+
+# Lua
+*.out
+*.o
+luarocks/
+
+# Node.js (future website/docs)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.next/
+dist/
+build/
+.cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+.pytest_cache/
+
+# IDEs & Editors
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosv
+*.sln.docstates
+
+# Environment files
+.env
+.env.local
+.env.*.local
