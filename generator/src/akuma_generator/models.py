@@ -33,6 +33,7 @@ class GeneralModel(BaseModel):
     inactive_border_color: str = "rgba(595959aa)"
     layout: str = "dwindle"
     resize_on_border: bool = True
+    allow_tearing: bool = False
 
 
 class BlurModel(BaseModel):
@@ -69,12 +70,16 @@ class TouchpadModel(BaseModel):
 
     natural_scroll: bool = True
     tap_to_click: bool = True
+    middle_button_emulation: bool = True
 
 
 class InputModel(BaseModel):
     """Pydantic model representing input device settings."""
 
     kb_layout: str = "us"
+    kb_variant: str = ""
+    kb_options: str = ""
+    follow_mouse: int = 1
     sensitivity: Union[int, float] = 0
     touchpad: TouchpadModel = Field(default_factory=TouchpadModel)
 
@@ -88,6 +93,7 @@ class AutostartModel(BaseModel):
             "mako",
             "swww-daemon",
             "swayosd-server",
+            "hypridle",
         ]
     )
     wallpaper_path: str = "/home/akuma/Downloads/plana-blue-archive-1-moewalls-com.mp4"

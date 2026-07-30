@@ -1,3 +1,6 @@
 {% for monitor in monitors %}
 monitor={{ monitor.name }},{{ monitor.resolution }}@{{ monitor.refresh }},{{ monitor.position }},{{ monitor.scale }}
 {% endfor %}
+
+# Fallback monitor rule for automatic display detection
+monitor=,preferred,auto,1

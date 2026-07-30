@@ -1,13 +1,20 @@
+# AkumaOS Window Decoration & Glassmorphism Configuration
+
 decoration {
     rounding = {{ decoration.rounding }}
     active_opacity = {{ decoration.active_opacity }}
     inactive_opacity = {{ decoration.inactive_opacity }}
+    dim_inactive = true
+    dim_strength = 0.10
 
     blur {
         enabled = {{ 'true' if decoration.blur.enabled else 'false' }}
         size = {{ decoration.blur.size }}
         passes = {{ decoration.blur.passes }}
         new_optimizations = {{ 'true' if decoration.blur.new_optimizations else 'false' }}
+        xray = true
+        ignore_opacity = true
+        popups = true
         vibrancy = {{ decoration.blur.vibrancy }}
     }
 

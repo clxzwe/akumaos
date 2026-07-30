@@ -1,1 +1,30 @@
-# AkumaOS Hyprland window rules configuration (placeholder)
+# AkumaOS Hyprland Window and Layer Rules (Hyprland 0.56.x)
+
+# Suppress maximize events for all windows
+windowrule = suppress_event maximize, match:class .*
+
+# Fix XWayland drag/focus issues
+windowrule = no_focus on, match:class ^$, match:title ^$, match:xwayland 1, match:float 1, match:fullscreen 0, match:pin 0
+
+# Floating dialogs and system utilities
+windowrule = float 1, match:class ^(pavucontrol|org.pulseaudio.pavucontrol)$
+windowrule = float 1, match:class ^(blueman-manager)$
+windowrule = float 1, match:class ^(nm-connection-editor|nm-launcher)$
+windowrule = float 1, match:class ^(file_progress|confirm|dialog|download|notification|error|splash|confirmreset)$
+windowrule = float 1, match:title ^(Open File|Save File|Select a File|Choose Files|File Upload|Volume Control)$
+
+# Picture-in-Picture window rules
+windowrule = float 1, match:title ^(Picture-in-Picture)$
+windowrule = pin 1, match:title ^(Picture-in-Picture)$
+windowrule = move 72% 72%, match:title ^(Picture-in-Picture)$
+
+# Idle inhibitor rules for media players & browsers
+windowrule = idle_inhibit focus, match:class ^(mpv|vlc|firefox)$
+
+# Layer rules for glassmorphic effects (Waybar, Wofi, Mako)
+layerrule = blur 1, match:namespace wofi
+layerrule = ignore_alpha 0.5, match:namespace wofi
+layerrule = blur 1, match:namespace waybar
+layerrule = ignore_alpha 0.5, match:namespace waybar
+layerrule = blur 1, match:namespace mako
+layerrule = ignore_alpha 0.5, match:namespace mako

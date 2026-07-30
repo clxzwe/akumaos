@@ -1,21 +1,22 @@
 # AkumaOS Keybindings Configuration
 
-# Applications
+# ── Applications ───────────────────────────────────────────────────
 bind = SUPER, Return, exec, ghostty
 bind = SUPER, B, exec, firefox
 bind = SUPER, E, exec, nautilus
 bind = SUPER, Space, exec, wofi --show drun
 bind = SUPER, Escape, exec, wofi --show run
+bind = SUPER, V, exec, bash -c 'cliphist list | wofi -dmenu | cliphist decode | wl-copy'
 
-# Window Management
+# ── Window Management ──────────────────────────────────────────────
 bind = SUPER, Q, killactive,
 bind = SUPER, F, fullscreen, 0
-bind = SUPER, V, togglefloating,
+bind = SUPER SHIFT, F, togglefloating,
 bind = SUPER, C, centerwindow,
 bind = SUPER, P, pseudo,
 bind = SUPER, M, layoutmsg, togglesplit
 
-# Focus
+# ── Focus Navigation ───────────────────────────────────────────────
 bind = SUPER, H, movefocus, l
 bind = SUPER, L, movefocus, r
 bind = SUPER, K, movefocus, u
@@ -26,19 +27,33 @@ bind = SUPER, right, movefocus, r
 bind = SUPER, up, movefocus, u
 bind = SUPER, down, movefocus, d
 
-# Move Windows
+# ── Move Windows ───────────────────────────────────────────────────
 bind = SUPER SHIFT, H, movewindow, l
 bind = SUPER SHIFT, L, movewindow, r
 bind = SUPER SHIFT, K, movewindow, u
 bind = SUPER SHIFT, J, movewindow, d
 
-# Resize Windows
+bind = SUPER SHIFT, left, movewindow, l
+bind = SUPER SHIFT, right, movewindow, r
+bind = SUPER SHIFT, up, movewindow, u
+bind = SUPER SHIFT, down, movewindow, d
+
+# ── Resize Windows ─────────────────────────────────────────────────
 bind = SUPER CTRL, H, resizeactive, -30 0
 bind = SUPER CTRL, L, resizeactive, 30 0
 bind = SUPER CTRL, K, resizeactive, 0 -30
 bind = SUPER CTRL, J, resizeactive, 0 30
 
-# Workspaces
+bind = SUPER CTRL, left, resizeactive, -30 0
+bind = SUPER CTRL, right, resizeactive, 30 0
+bind = SUPER CTRL, up, resizeactive, 0 -30
+bind = SUPER CTRL, down, resizeactive, 0 30
+
+# Mouse Binds
+bindm = SUPER, mouse:272, movewindow
+bindm = SUPER, mouse:273, resizewindow
+
+# ── Workspaces ─────────────────────────────────────────────────────
 bind = SUPER, 1, workspace, 1
 bind = SUPER, 2, workspace, 2
 bind = SUPER, 3, workspace, 3
@@ -62,23 +77,32 @@ bind = SUPER SHIFT, 8, movetoworkspace, 8
 bind = SUPER SHIFT, 9, movetoworkspace, 9
 bind = SUPER SHIFT, 0, movetoworkspace, 10
 
-# Scratchpad
+# Workspace Navigation
+bind = SUPER CTRL, left, workspace, e-1
+bind = SUPER CTRL, right, workspace, e+1
+bind = SUPER, mouse_down, workspace, e+1
+bind = SUPER, mouse_up, workspace, e-1
+
+# ── Scratchpad (Special Workspace) ─────────────────────────────────
 bind = SUPER, S, togglespecialworkspace, magic
 bind = SUPER SHIFT, S, movetoworkspace, special:magic
 
-# Screenshots
+# ── Screenshots & Lock ─────────────────────────────────────────────
 bind = , Print, exec, bash -c 'mkdir -p ~/Pictures/Screenshots && hyprshot -m region -o ~/Pictures/Screenshots'
-bind = SHIFT, Print, exec, bash -c 'mkdir -p ~/Pictures/Screenshots && hyprshot -m output -o ~/Pictures/Screenshots'
+bind = SHIFT, Print, exec, bash -c 'mkdir -p ~/Pictures/Screenshots && hyprshot -m window -o ~/Pictures/Screenshots'
+bind = CTRL, Print, exec, bash -c 'mkdir -p ~/Pictures/Screenshots && hyprshot -m output -o ~/Pictures/Screenshots'
+bind = SUPER, L, exec, hyprlock
 
-# Media Controls (swayosd)
+# ── Media Controls (swayosd & playerctl) ──────────────────────────
 bindle = , XF86AudioRaiseVolume, exec, swayosd-client --output-volume raise
 bindle = , XF86AudioLowerVolume, exec, swayosd-client --output-volume lower
 bindl = , XF86AudioMute, exec, swayosd-client --output-volume mute-toggle
 bindle = , XF86MonBrightnessUp, exec, swayosd-client --brightness raise
 bindle = , XF86MonBrightnessDown, exec, swayosd-client --brightness lower
+bindl = , XF86AudioPlay, exec, playerctl play-pause
+bindl = , XF86AudioNext, exec, playerctl next
+bindl = , XF86AudioPrev, exec, playerctl previous
 
-# Productivity Navigation
+# ── Window Navigation ──────────────────────────────────────────────
 bind = ALT, Tab, cyclenext,
 bind = ALT SHIFT, Tab, cyclenext, prev
-bind = CTRL ALT, left, workspace, e-1
-bind = CTRL ALT, right, workspace, e+1

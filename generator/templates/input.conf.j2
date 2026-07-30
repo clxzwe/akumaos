@@ -1,9 +1,15 @@
+# AkumaOS Input Configuration
+
 input {
     kb_layout = {{ input.kb_layout }}
+    kb_variant = {{ input.kb_variant }}
+    kb_options = {{ input.kb_options }}
+    follow_mouse = {{ input.follow_mouse }}
     sensitivity = {{ input.sensitivity }}
 
     touchpad {
         natural_scroll = {{ 'true' if input.touchpad.natural_scroll else 'false' }}
         tap-to-click = {{ 'true' if input.touchpad.tap_to_click else 'false' }}
+        middle_button_emulation = {{ 'true' if input.touchpad.middle_button_emulation else 'false' }}
     }
 }
