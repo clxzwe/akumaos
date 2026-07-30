@@ -9,6 +9,7 @@ from typing import List, Optional, Tuple
 
 from akuma_generator.core.logger import info, warning
 from akuma_generator.core.plugin_manager import PluginManager
+from akuma_generator.core.validator import check_hyprctl_configerrors
 from akuma_generator.plugins.hypr.component_registry import ComponentRegistry
 
 DOCTOR_DEPENDENCIES = [
@@ -209,3 +210,7 @@ def apply_desktop_config(
 
     # 5. Reload Hyprland
     reload_hyprland(dry_run=dry_run)
+
+    # 6. Check for runtime configuration errors
+    if not dry_run:
+        check_hyprctl_configerrors()

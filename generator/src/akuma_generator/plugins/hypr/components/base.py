@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from akuma_generator.core.output import OutputManager
+from akuma_generator.core.validator import validate_hypr_syntax
 
 
 class HyprComponent(ABC):
@@ -51,6 +52,11 @@ class HyprComponent(ABC):
         validated_data = self.validate(raw_data)
         rendered_content = self.render(validated_data, project_root)
         output_path = self.get_output_path(project_root, output_dir=output_dir)
+
+        validate_hypr_syntax(
+            rendered_content, file_path=output_path if not dry_run else None
+        )
+
         return OutputManager.write(
             rendered_content,
             output_path,

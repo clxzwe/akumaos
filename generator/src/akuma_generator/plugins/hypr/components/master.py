@@ -8,7 +8,10 @@ from akuma_generator.core.loader import load_yaml
 from akuma_generator.core.logger import debug
 from akuma_generator.core.output import OutputManager
 from akuma_generator.core.renderer import render_template
-from akuma_generator.core.validator import validate_desktop_config
+from akuma_generator.core.validator import (
+    validate_desktop_config,
+    validate_hypr_syntax,
+)
 from akuma_generator.plugins.hypr.components.base import HyprComponent
 
 
@@ -63,6 +66,11 @@ class HyprlandConfigComponent(HyprComponent):
         raw_data = self.load(project_root)
         validated_data = self.validate(raw_data)
         rendered_content = self.render(validated_data, project_root)
+
+        validate_hypr_syntax(
+            rendered_content, file_path=output_path if not dry_run else None
+        )
+
         return OutputManager.write(
             rendered_content,
             output_path,

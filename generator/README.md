@@ -79,6 +79,14 @@ flowchart TD
 
 ---
 
+## Target Compatibility
+
+The AkumaOS configuration generator explicitly targets **Hyprland 0.56.x**.
+
+All generated configuration directives, keybindings, and dispatchers are validated against the Hyprland 0.56.x specification. Unsupported directives (such as `<dwindle:pseudotile>`) and deprecated dispatchers (such as standalone `togglesplit`) are strictly excluded during generation. Future Hyprland releases require explicit compatibility updates before changing generator syntax.
+
+---
+
 ## Directory Structure
 
 ```text
@@ -89,3 +97,4 @@ generator/
 ├── output/           # Staging directory for generated configuration files
 └── tests/            # Automated template rendering and validation test suites
 ```
+

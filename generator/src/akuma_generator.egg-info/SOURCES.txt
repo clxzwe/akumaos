@@ -11,6 +11,7 @@ src/akuma_generator.egg-info/requires.txt
 src/akuma_generator.egg-info/top_level.txt
 src/akuma_generator/core/__init__.py
 src/akuma_generator/core/base_plugin.py
+src/akuma_generator/core/deployment.py
 src/akuma_generator/core/errors.py
 src/akuma_generator/core/loader.py
 src/akuma_generator/core/logger.py
@@ -31,9 +32,11 @@ src/akuma_generator/plugins/hypr/components/binds.py
 src/akuma_generator/plugins/hypr/components/decoration.py
 src/akuma_generator/plugins/hypr/components/environment.py
 src/akuma_generator/plugins/hypr/components/general.py
+src/akuma_generator/plugins/hypr/components/groups.py
 src/akuma_generator/plugins/hypr/components/input.py
 src/akuma_generator/plugins/hypr/components/master.py
 src/akuma_generator/plugins/hypr/components/monitors.py
+src/akuma_generator/plugins/hypr/components/rules.py
 src/akuma_generator/plugins/hypridle/__init__.py
 src/akuma_generator/plugins/hyprlock/__init__.py
 src/akuma_generator/plugins/mako/__init__.py
@@ -52,4 +55,5 @@ tests/test_logger.py
 tests/test_output.py
 tests/test_plugin_manager.py
 tests/test_renderer.py
+tests/test_sprint2.py
 tests/test_validator.py
