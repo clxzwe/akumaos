@@ -208,6 +208,21 @@ def apply_desktop_config(
         output_dir=base_hypr,
     )
 
+    # Deploy scripts and waybar configs
+    if not dry_run:
+        scripts_dest = base_hypr / "scripts"
+        scripts_dest.mkdir(parents=True, exist_ok=True)
+        wallpaper_src = project_root / "scripts" / "wallpaper.sh"
+        if wallpaper_src.exists():
+            shutil.copy2(wallpaper_src, scripts_dest / "wallpaper.sh")
+            (scripts_dest / "wallpaper.sh").chmod(0o755)
+
+        waybar_src = project_root / "config" / "waybar"
+        if waybar_src.exists():
+            waybar_dest = base_hypr.parent / "waybar"
+            waybar_dest.mkdir(parents=True, exist_ok=True)
+            shutil.copytree(waybar_src, waybar_dest, dirs_exist_ok=True)
+
     # 5. Reload Hyprland
     reload_hyprland(dry_run=dry_run)
 

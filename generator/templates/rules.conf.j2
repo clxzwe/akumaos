@@ -6,6 +6,10 @@ windowrule = suppress_event maximize, match:class .*
 # Fix XWayland drag/focus issues
 windowrule = no_focus on, match:class ^$, match:title ^$, match:xwayland 1, match:float 1, match:fullscreen 0, match:pin 0
 
+# Spotify soft transparency window rules (keep text fully readable)
+windowrule = opacity 0.92 0.85, match:class ^(Spotify|spotify)$
+windowrule = opacity 0.92 0.85, match:title .*Spotify.*
+
 # Floating dialogs and system utilities
 windowrule = float 1, match:class ^(pavucontrol|org.pulseaudio.pavucontrol)$
 windowrule = float 1, match:class ^(blueman-manager)$
